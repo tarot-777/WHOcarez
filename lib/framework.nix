@@ -34,8 +34,6 @@
     inputs.catppuccin.homeModules.catppuccin
     inputs.stylix.homeModules.stylix
     inputs.nix-index-database.homeModules.nix-index
-    # Neovim via nixvim (declarative Neovim distribution)
-    inputs.nixvim.homeModules.nixvim
   ];
 
   embeddedHomeSharedModules =
