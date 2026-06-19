@@ -118,11 +118,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    sops = {
-      url = "github:mozilla/sops";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     hyprland.url = "git+https://github.com/hyprwm/Hyprland.git?ref=refs/tags/v0.47.0&submodules=1";
 
     catppuccin = {
