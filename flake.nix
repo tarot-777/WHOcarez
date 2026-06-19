@@ -108,11 +108,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixery = {
-      url = "github:numtide/nixery";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
