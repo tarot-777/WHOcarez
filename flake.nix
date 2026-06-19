@@ -135,10 +135,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nushell = {
-      url = "github:nushell/nushell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Use nushell from nixpkgs (no flake.nix at repo HEAD); rely on package in mkPkgs when needed.
 
     nh = {
       url = "github:nix-community/nh";
