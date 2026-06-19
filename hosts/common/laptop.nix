@@ -62,5 +62,13 @@
     powertop
     tmux
     usbutils
+
+    # Ensure Niri and DankMaterialShell/DMS packages are available system-wide
+    # when deploying the framework to a laptop. These refer to the flakes exposed
+    # in the top-level flake inputs (niri-flake and dank-material-shell).
+    # If the package is missing for the current system, the pkgs reference will
+    # gracefully fail at evaluation; keep these as convenient defaults.
+    (inputs.niri-flake.packages.${pkgs.stdenv.hostPlatform.system}.niri // null)
+    (inputs.dank-material-shell.packages.${pkgs.stdenv.hostPlatform.system}.dms-shell // null)
   ];
 }

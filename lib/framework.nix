@@ -145,6 +145,19 @@
         mkNixos (host // {inherit hostName;})
     )
     settings.nixosHosts;
+
+ extraFlakes = {
+   colmena = inputs.colmena;
+   morph = inputs.morph;
+   deploy_rs = inputs."deploy-rs";
+   hydra = inputs.hydra;
+   nixery = inputs.nixery;
+   nur = inputs.nur;
+   rnix_lsp = inputs."rnix-lsp";
+   sops = inputs.sops;
+   # lorri and devshell are already accessible via inputs.lorri and inputs.devshell
+ };
+
 in {
   inherit
     commonSpecialArgs
@@ -156,5 +169,6 @@ in {
     nixosConfigurations
     nixpkgsConfig
     overlays
+    extraFlakes
     ;
 }

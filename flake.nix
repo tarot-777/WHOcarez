@@ -52,6 +52,98 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    dank-material-shell = {
+      url = "github:sodiboo/dank-material-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Additional flake helpers and tooling selected for improved deployability
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    flake-utils-plus = {
+      url = "github:numtide/flake-utils-plus";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    snowfall = {
+      url = "github:sodiboo/snowfall";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    cachix = {
+      url = "github:cachix/cachix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    devshell = {
+      url = "github:nix-community/devshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    lorri = {
+      url = "github:target/lorri";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    direnv = {
+      url = "github:direnv/direnv";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    niv = {
+      url = "github:nix-community/niv";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Deployment, CI, and DX helpers requested by user
+    colmena = {
+      url = "github:nix-community/colmena";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    morph = {
+      url = "github:DBCDK/morph";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hydra = {
+      url = "github:NixOS/hydra";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixery = {
+      url = "github:numtide/nixery";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    "rnix-lsp" = {
+      url = "github:nix-community/rnix-lsp";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    sops = {
+      url = "github:mozilla/sops";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprland.url = "git+https://github.com/hyprwm/Hyprland.git?ref=refs/tags/v0.47.0&submodules=1";
 
     catppuccin = {

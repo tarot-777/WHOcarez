@@ -27,7 +27,7 @@ points without activating the configuration.
 | Reproducible workstation | Pinned Home Manager and NixOS outputs with reusable constructors, overlays, optional profiles, and a development shell |
 | Terminal workflow | Zsh and Nushell, Starship, Atuin, Carapace, fzf, Zoxide, Yazi, modern Unix tools, and nearest-flake helpers |
 | Editor and Git | Neovim with LSP, completion, formatting, linting, Telescope, Oil, Diffview, Git signs, and framework actions |
-| Desktop integration | Niri-oriented Wayland tooling, Kitty, tmux, Dolphin service menus, MIME defaults, notifications, capture, and clipboard tools |
+| Desktop integration | Niri-oriented Wayland tooling, Kitty, tmux, Dolphin service menus, MIME defaults, notifications, capture, and clipboard tools. Niri and DankMaterialShell (DMS) are exposed as flake inputs and included as default packages for laptop NixOS hosts so a deploy brings up the Niri session and DMS tooling. |
 | Media | Shared MPV and Celluloid configuration with UOSC, Thumbfast, MPRIS, SponsorBlock, queues, and watch-later state |
 | Operations | Flake apps and shell commands for builds, switches, updates, audits, health checks, package discovery, and garbage collection |
 | LLM orchestration | Redacted context bundles, command transcripts, Nix fixpacks, review prompts, browser handoff, and guarded patch application |
