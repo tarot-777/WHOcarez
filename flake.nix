@@ -52,10 +52,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    dank-material-shell = {
-      url = "github:sodiboo/dank-material-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # dank-material-shell input intentionally omitted or replaced if unavailable.
 
     # Additional flake helpers and tooling selected for improved deployability
     flake-utils = {
