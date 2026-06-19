@@ -1,4 +1,4 @@
-# LOVE2bleed!
+# WHOcares!
 
 [![Nix Flake](https://img.shields.io/badge/Nix-Flake-5277C3?logo=nixos&logoColor=white)](https://nixos.org/)
 [![Home Manager](https://img.shields.io/badge/Home%20Manager-declarative-7EBAE4)](https://github.com/nix-community/home-manager)
