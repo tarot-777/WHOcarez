@@ -60,25 +60,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    flake-utils-plus = {
-      url = "github:numtide/flake-utils-plus";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    snowfall = {
-      url = "github:sodiboo/snowfall";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Removed flake-utils-plus and snowfall (unavailable upstream).
 
     cachix = {
       url = "github:cachix/cachix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    devshell = {
-      url = "github:nix-community/devshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # devshell was unavailable via a simple HEAD lookup; omit for now to keep
+    # flake evaluation robust. Consider adding a pinned ref later.
 
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
@@ -86,7 +76,7 @@
     };
 
     lorri = {
-      url = "github:target/lorri";
+      url = "github:nix-community/lorri";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
