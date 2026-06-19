@@ -1,5 +1,5 @@
 {
-  description = "WHOcares! - a flake-powered Linux workstation framework";
+  description = "LOVE2bleed! - a flake-powered Linux workstation framework";
 
   nixConfig = {
     extra-substituters = [
