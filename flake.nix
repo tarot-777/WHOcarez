@@ -85,10 +85,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    niv = {
-      url = "github:nix-community/niv";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
 
     # Deployment, CI, and DX helpers requested by user
     colmena = {
