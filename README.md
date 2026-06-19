@@ -72,6 +72,24 @@ Runtime commands can also override the path with `AEGIS_FLAKE` or
 
 ## Deployment Runbook
 
+### Opt-in examples: agenix and rustfs
+
+Two small example NixOS snippets are provided under `hosts/examples/` to make enabling these powerful, security-oriented features a one-line import.
+
+- hosts/examples/agenix.nix — example opt-in configuration to deploy Age-encrypted secrets with `agenix` (top-level flake input `inputs.agenix` required). Import with:
+
+    imports = [ ./examples/agenix.nix ];
+
+  Then adjust `agenix.keys` and `secretsDir` to match repository layout.
+
+- hosts/examples/rustfs.nix — example opt-in configuration for the rustfs hardened storage service (top-level flake input `inputs.rustfs` required). Import with:
+
+    imports = [ ./examples/rustfs.nix ];
+
+  Then tune `services.rustfs` settings for your host.
+
+## Deployment Runbook
+
 ### Requirements
 
 | Requirement | Generic Linux Home Manager | Existing NixOS switch | Fresh NixOS install |
