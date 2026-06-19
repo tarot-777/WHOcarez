@@ -83,9 +83,6 @@
     inputs.catppuccin.nixosModules.catppuccin
     inputs.stylix.nixosModules.stylix
     inputs.nix-index-database.nixosModules.nix-index
-    # Add agenix and rustfs modules where available
-    (lib.optionals (builtins.hasAttr "agenix" inputs) [ inputs.agenix.nixosModules.agenix ])
-    (lib.optionals (builtins.hasAttr "rustfs" inputs) [ inputs.rustfs.nixosModules.rustfs ])
   ];
 
   mkNixos = {
