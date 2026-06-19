@@ -120,6 +120,41 @@
 
     hyprland.url = "git+https://github.com/hyprwm/Hyprland.git?ref=refs/tags/v0.47.0&submodules=1";
 
+    misterio-starter = {
+      url = "github:misterio77/nix-starter-configs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    rustfs = {
+      url = "github:rustfs/rustfs-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nushell = {
+      url = "github:nushell/nushell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nh = {
+      url = "github:nix-community/nh";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-ld = {
+      url = "github:nix-community/nix-ld";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
