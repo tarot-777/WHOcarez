@@ -10,12 +10,9 @@
     permittedInsecurePackages = [];
   };
 
-  optionalOverlay = input: name:
-    lib.optionals (input ? overlays && input.overlays ? ${name}) [input.overlays.${name}];
-
   overlays =
-    (optionalOverlay inputs.fenix "default")
-    ++ (optionalOverlay inputs.nix-alien "default");
+    lib.optionals (inputs ? fenix && inputs.fenix ? overlays && inputs.fenix.overlays ? default) [inputs.fenix.overlays.default]
+    ++ lib.optionals (inputs ? nix-alien && inputs.nix-alien ? overlays && inputs.nix-alien.overlays ? default) [inputs.nix-alien.overlays.default];
 
   mkPkgs = system:
     import inputs.nixpkgs {
