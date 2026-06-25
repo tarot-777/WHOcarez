@@ -32,8 +32,16 @@ jobs:
       - name: Build TRIX CLI
         run: nix build .#trix
 
+      - name: Build TRIX laptop bootstrap app
+        run: nix build .#trix-laptop
+
       - name: Build TRIX base shell
         run: nix build .#checks.x86_64-linux.trix-base-shell
 
       - name: Run source quality check
         run: nix build .#checks.x86_64-linux.source-quality
+
+      - name: Smoke test TRIX commands
+        run: |
+          nix run .#trix -- info
+          nix run .#trix-laptop -- help
