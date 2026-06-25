@@ -1,5 +1,5 @@
 {
-  description = "WHOcares! - a flake-powered Linux workstation framework";
+  description = "TRIX-OS / WHOcares! - modular Nix workstation, research, LLM, lab, and deployment framework";
 
   nixConfig = {
     extra-substituters = [
@@ -22,171 +22,125 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nixos-hardware.url = "github:NixOS/nixos-hardware";
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     impermanence.url = "github:nix-community/impermanence";
-
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     niri-flake = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # dank-material-shell input intentionally omitted or replaced if unavailable.
-
-    # Additional flake helpers and tooling selected for improved deployability
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # Removed flake-utils-plus and snowfall (unavailable upstream).
-
     cachix = {
       url = "github:cachix/cachix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # devshell was unavailable via a simple HEAD lookup; omit for now to keep
-    # flake evaluation robust. Consider adding a pinned ref later.
-
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     lorri = {
       url = "github:nix-community/lorri";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     direnv = {
       url = "github:direnv/direnv";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-
-
-    # Deployment, CI, and DX helpers requested by user
     colmena = {
       url = "github:nix-community/colmena";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     morph = {
       url = "github:DBCDK/morph";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     hydra = {
       url = "github:NixOS/hydra";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     "rnix-lsp" = {
       url = "github:nix-community/rnix-lsp";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     hyprland.url = "git+https://github.com/hyprwm/Hyprland.git?ref=refs/tags/v0.47.0&submodules=1";
-
     misterio-starter = {
       url = "github:misterio77/nix-starter-configs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     rustfs = {
       url = "github:rustfs/rustfs-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # Use nushell from nixpkgs (no flake.nix at repo HEAD); rely on package in mkPkgs when needed.
-
     nh = {
       url = "github:nix-community/nh";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nix-ld = {
       url = "github:nix-community/nix-ld";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     stylix = {
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nix-alien = {
       url = "github:thiagokokada/nix-alien";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     comin = {
       url = "github:nlewo/comin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     microvm = {
       url = "github:astro/microvm.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -210,11 +164,11 @@
         pkgs = framework.mkPkgs system;
         defaultRoot = self.outPath;
         defaultHomeProfile = "${settings.user.name}@${settings.defaultHomeHost}";
+
         runtimeFlakeRef = ''
           root="''${WHOCARES_FLAKE:-}"
-          if [[ -z "$root" ]]; then
-            root="''${AEGIS_FLAKE:-}"
-          fi
+          if [[ -z "$root" ]]; then root="''${AEGIS_FLAKE:-}"; fi
+          if [[ -z "$root" ]]; then root="''${TRIX_FLAKE:-}"; fi
           if [[ -z "$root" ]]; then
             if [[ -f "${settings.repositoryPath}/flake.nix" ]]; then
               root="${settings.repositoryPath}"
@@ -224,48 +178,24 @@
               root="${defaultRoot}"
             fi
           fi
-          case "$root" in
-            *:*) flake_ref="$root" ;;
-            *) flake_ref="path:$root" ;;
-          esac
+          case "$root" in *:*) flake_ref="$root" ;; *) flake_ref="path:$root" ;; esac
         '';
 
-        mkCommand = {
-          name,
-          runtimeInputs,
-          text,
-        }:
-          pkgs.writeShellApplication {
-            inherit name runtimeInputs text;
-          };
+        mkCommand = {name, runtimeInputs ? [], text}:
+          pkgs.writeShellApplication {inherit name runtimeInputs text;};
 
         formatter = mkCommand {
           name = "whocares-fmt";
           runtimeInputs = [pkgs.alejandra];
           text = ''
-            if (($# == 0)); then
-              set -- .
-            fi
+            if (($# == 0)); then set -- .; fi
             exec alejandra "$@"
           '';
         };
 
-        pipelineText =
-          builtins.replaceStrings
-          [
-            "__WHOCARES_DEFAULT_FLAKE__"
-            "__WHOCARES_DEFAULT_USER__"
-            "__WHOCARES_DEFAULT_HOME_HOST__"
-            "__WHOCARES_DEFAULT_NIXOS_HOST__"
-            "__WHOCARES_DEFAULT_SYSTEM__"
-          ]
-          [
-            settings.repositoryPath
-            settings.user.name
-            settings.defaultHomeHost
-            settings.defaultNixosHost
-            settings.defaultSystem
-          ]
+        pipelineText = builtins.replaceStrings
+          ["__WHOCARES_DEFAULT_FLAKE__" "__WHOCARES_DEFAULT_USER__" "__WHOCARES_DEFAULT_HOME_HOST__" "__WHOCARES_DEFAULT_NIXOS_HOST__" "__WHOCARES_DEFAULT_SYSTEM__"]
+          [settings.repositoryPath settings.user.name settings.defaultHomeHost settings.defaultNixosHost settings.defaultSystem]
           (builtins.readFile ./scripts/whocares-pipeline.sh);
 
         commands = rec {
@@ -275,48 +205,36 @@
             text = ''
               ${runtimeFlakeRef}
               printf '%s\n' \
-                "WHOcares! workstation framework" \
-                "Declarative shell, editor, desktop, media, and privacy workflows." \
-                "" \
+                "TRIX-OS / WHOcares! workstation framework" \
                 "Root:          $root" \
                 "Flake ref:     $flake_ref" \
                 "Home profile:  ${defaultHomeProfile}" \
-                "Workstation:   ${settings.user.name}@workstation" \
-                "Laptop:        ${settings.user.name}@laptop / ${settings.user.name}@hp-laptop" \
                 "NixOS host:    ${settings.defaultNixosHost}" \
-                "Portable OS:   workstation / laptop / hp-laptop" \
                 "" \
-                "Capabilities:" \
-                "  Home Manager     Zsh, Nushell, Neovim, Kitty, tmux, Git, and CLI tools" \
-                "  Desktop          Niri-oriented Wayland tools, Dolphin, and media defaults" \
-                "  Automation       Build, switch, update, audit, and health-check commands" \
-                "  LLM workflows    Redacted context, fixpacks, review prompts, and guarded patches" \
-                "  Privacy          Guarded Whonix verification, import, and libvirt control" \
-                "  Profiles         Optional graphics, office, virtualization, and ROCm sets" \
-                "" \
-                "Try it:" \
-                "  nix develop $flake_ref" \
-                "  nix run $flake_ref#pipeline -- inputs" \
+                "Apps:" \
+                "  nix run $flake_ref#trix -- info" \
                 "  nix run $flake_ref#pipeline -- validate" \
                 "  nix run $flake_ref#home-build" \
-                "  nix run $flake_ref#home-switch" \
-                "  nix run $flake_ref#nixos-install -- <host> root@<target-ip>" \
-                "  nix run $flake_ref#check"
+                "  nix run $flake_ref#nixos-switch" \
+                "" \
+                "TRIX shells:" \
+                "  nix develop $flake_ref#trix-base" \
+                "  nix develop $flake_ref#trix-research" \
+                "  nix develop $flake_ref#trix-redteam" \
+                "  nix develop $flake_ref#trix-crypto" \
+                "  nix develop $flake_ref#trix-llm"
             '';
+          };
+
+          trix = mkCommand {
+            name = "trix";
+            runtimeInputs = with pkgs; [coreutils curl findutils git gnugrep gnused gnutar gzip iproute2 jq nix procps util-linux zstd];
+            text = builtins.readFile ./scripts/trixctl.sh;
           };
 
           pipeline = mkCommand {
             name = "whocares-pipeline";
-            runtimeInputs = [
-              pkgs.coreutils
-              pkgs.git
-              pkgs.home-manager
-              pkgs.nix
-              pkgs.nixos-anywhere
-              pkgs.nixos-rebuild
-              pkgs.sudo
-              pkgs.util-linux
-            ];
+            runtimeInputs = with pkgs; [coreutils git home-manager nix nixos-anywhere nixos-rebuild sudo util-linux];
             text = pipelineText;
           };
 
@@ -327,10 +245,6 @@
               ${runtimeFlakeRef}
               host="''${AEGIS_HOST:-${settings.defaultHomeHost}}"
               profile="''${AEGIS_PROFILE:-${settings.user.name}@$host}"
-              [[ "$root" == *:* || -f "$root/flake.nix" ]] || {
-                echo "No flake.nix found at $root" >&2
-                exit 2
-              }
               exec home-manager build --flake "$flake_ref#$profile" "$@"
             '';
           };
@@ -342,10 +256,6 @@
               ${runtimeFlakeRef}
               host="''${AEGIS_HOST:-${settings.defaultHomeHost}}"
               profile="''${AEGIS_PROFILE:-${settings.user.name}@$host}"
-              [[ "$root" == *:* || -f "$root/flake.nix" ]] || {
-                echo "No flake.nix found at $root" >&2
-                exit 2
-              }
               exec home-manager switch --flake "$flake_ref#$profile" "$@"
             '';
           };
@@ -356,72 +266,24 @@
             text = ''
               ${runtimeFlakeRef}
               host="''${AEGIS_NIXOS_HOST:-${settings.defaultNixosHost}}"
-              [[ "$root" == *:* || -f "$root/flake.nix" ]] || {
-                echo "No flake.nix found at $root" >&2
-                exit 2
-              }
               exec sudo nixos-rebuild switch --flake "$flake_ref#$host" "$@"
             '';
           };
 
           nixos-install = mkCommand {
             name = "aegis-nixos-install";
-            runtimeInputs = [
-              pkgs.coreutils
-              pkgs.nixos-anywhere
-              pkgs.util-linux
-            ];
+            runtimeInputs = with pkgs; [coreutils nixos-anywhere util-linux];
             text = ''
-              usage() {
-                cat >&2 <<'EOF'
-              Usage: nix run <flake>#nixos-install -- <host> <ssh-target> [nixos-anywhere args...]
-
-              Examples:
-                nix run .#nixos-install -- laptop root@192.0.2.20 --vm-test
-                nix run .#nixos-install -- workstation root@192.0.2.30
-
-              Safety:
-                Fresh installs require hosts/<host>/disko.nix so disk layout is explicit.
-                Set WHOCARES_INSTALL_WITHOUT_DISKO=1 only for pre-mounted/custom nixos-anywhere phases.
-              EOF
-              }
-
-              [[ $# -ge 2 ]] || {
-                usage
-                exit 2
-              }
-
+              [[ $# -ge 2 ]] || { echo "Usage: nix run <flake>#nixos-install -- <host> <ssh-target> [args...]" >&2; exit 2; }
               ${runtimeFlakeRef}
-              if [[ "$root" == *:* ]]; then
-                echo "nixos-install requires a local flake path so host and disko files can be checked." >&2
-                echo "Clone or copy the framework first, then run with WHOCARES_FLAKE=/path/to/WHOcares." >&2
-                exit 2
-              fi
-
-              host="$1"
-              target="$2"
-              shift 2
+              host="$1"; target="$2"; shift 2
               host_dir="$root/hosts/$host"
-
-              [[ -d "$host_dir" ]] || {
-                echo "nixos-install: unknown host '$host' at $host_dir" >&2
-                exit 2
-              }
-
+              [[ -d "$host_dir" ]] || { echo "unknown host: $host" >&2; exit 2; }
               if [[ ! -f "$host_dir/disko.nix" && "''${WHOCARES_INSTALL_WITHOUT_DISKO:-0}" != "1" ]]; then
-                echo "nixos-install: refusing install without $host_dir/disko.nix" >&2
-                echo "Add an explicit disko layout first, or set WHOCARES_INSTALL_WITHOUT_DISKO=1 for custom phases." >&2
+                echo "refusing install without $host_dir/disko.nix" >&2
                 exit 3
               fi
-
-              exec nice -n "''${WHOCARES_NICE:-10}" \
-                ionice -c2 -n7 \
-                nixos-anywhere \
-                  --flake "$flake_ref#$host" \
-                  --option max-jobs "''${WHOCARES_NIX_JOBS:-1}" \
-                  --option cores "''${WHOCARES_NIX_CORES:-2}" \
-                  "$@" \
-                  "$target"
+              exec nixos-anywhere --flake "$flake_ref#$host" "$@" "$target"
             '';
           };
 
@@ -430,11 +292,7 @@
             runtimeInputs = [pkgs.nix];
             text = ''
               ${runtimeFlakeRef}
-              [[ "$root" == *:* || -f "$root/flake.nix" ]] || {
-                echo "No flake.nix found at $root" >&2
-                exit 2
-              }
-              exec nix flake check --no-build "$@" "$flake_ref"
+              exec nix flake check --no-build "$flake_ref" "$@"
             '';
           };
 
@@ -443,30 +301,9 @@
             runtimeInputs = [pkgs.nix];
             text = ''
               ${runtimeFlakeRef}
-              [[ "$root" == *:* || -f "$root/flake.nix" ]] || {
-                echo "No flake.nix found at $root" >&2
-                exit 2
-              }
               exec nix flake update --flake "$flake_ref" "$@"
             '';
           };
-        };
-
-        commandDescriptions = {
-          info = "Show WHOcares! capabilities, targets, and entry points";
-          pipeline = "Run guided WHOcares bootstrap, validation, activation, and deployment workflows";
-          home-build = "Build the selected Home Manager profile";
-          home-switch = "Activate the selected Home Manager profile";
-          nixos-switch = "Rebuild and activate the selected NixOS host";
-          nixos-install = "Run guarded nixos-anywhere deployment for a local host";
-          check = "Evaluate every flake output without building it";
-          update = "Update the framework's locked flake inputs";
-        };
-
-        mkApp = name: package: {
-          type = "app";
-          program = lib.getExe package;
-          meta.description = commandDescriptions.${name};
         };
 
         evaluation = {
@@ -474,74 +311,57 @@
           nixosHosts = builtins.attrNames settings.nixosHosts;
           inherit defaultHomeProfile;
           inherit (settings) defaultNixosHost;
+          trixShells = ["trix-base" "trix-research" "trix-redteam" "trix-crypto" "trix-llm"];
         };
       in {
         inherit formatter;
 
         devShells = {
           aegis-dev = import ./shells/aegis-dev {inherit pkgs;};
+          trix-base = import ./shells/trix/base.nix {inherit pkgs;};
+          trix-research = import ./shells/trix/research.nix {inherit pkgs;};
+          trix-redteam = import ./shells/trix/redteam.nix {inherit pkgs;};
+          trix-crypto = import ./shells/trix/crypto.nix {inherit pkgs;};
+          trix-llm = import ./shells/trix/llm.nix {inherit pkgs;};
           default = self.devShells.${system}.aegis-dev;
         };
 
-        packages =
-          commands
-          // {
-            default = commands.info;
-          };
+        packages = commands // {default = commands.info;};
 
-        apps =
-          lib.mapAttrs mkApp commands
-          // {
-            default = mkApp "info" commands.info;
-          };
+        apps = lib.mapAttrs (_: package: {
+          type = "app";
+          program = lib.getExe package;
+        }) (commands // {default = commands.info;});
 
         checks = {
           devshell = self.devShells.${system}.aegis-dev;
-          framework-evaluation =
-            pkgs.writeText "aegis-framework-evaluation.json"
-            (builtins.toJSON evaluation);
-          source-quality =
-            pkgs.runCommand "whocares-source-quality" {
-              nativeBuildInputs = with pkgs; [
-                alejandra
-                deadnix
-                shellcheck
-                statix
-              ];
-              src = lib.cleanSource ./.;
-            } ''
-              cp -R "$src" source
-              chmod -R u+w source
-              cd source
-
-              alejandra --check .
-              statix check .
-              deadnix --fail .
-              shellcheck install.sh repair-from-documents-tree.sh scripts/whocares-pipeline.sh
-
-              touch "$out"
-            '';
+          trix-base-shell = self.devShells.${system}.trix-base;
+          framework-evaluation = pkgs.writeText "trix-framework-evaluation.json" (builtins.toJSON evaluation);
+          source-quality = pkgs.runCommand "trix-source-quality" {
+            nativeBuildInputs = with pkgs; [alejandra deadnix shellcheck statix];
+            src = lib.cleanSource ./.;
+          } ''
+            cp -R "$src" source
+            chmod -R u+w source
+            cd source
+            alejandra --check .
+            statix check .
+            deadnix --fail .
+            shellcheck install.sh repair-from-documents-tree.sh scripts/whocares-pipeline.sh scripts/trixctl.sh
+            touch "$out"
+          '';
         };
       };
 
       flake = {
         lib = {
           inherit settings;
-          inherit
-            (framework)
-            mkHome
-            mkNixos
-            mkPkgs
-            nixpkgsConfig
-            ;
+          inherit (framework) mkHome mkNixos mkPkgs nixpkgsConfig;
         };
-
         overlays.default = lib.composeManyExtensions framework.overlays;
-        inherit
-          (framework)
-          homeConfigurations
-          nixosConfigurations
-          ;
+        inherit (framework) homeConfigurations nixosConfigurations;
+        nixosModules.trix-os = ./hosts/common/trix-os.nix;
+        homeModules.trix-os = ./home/modules/trix-os.nix;
       };
     };
 }
