@@ -10,10 +10,12 @@
     permittedInsecurePackages = [];
   };
 
-  overlays = [
-    inputs.fenix.overlays.default
-    inputs.nix-alien.overlays.default
-  ];
+  optionalOverlay = input: name:
+    lib.optionals (input ? overlays && input.overlays ? ${name}) [input.overlays.${name}];
+
+  overlays =
+    (optionalOverlay inputs.fenix "default")
+    ++ (optionalOverlay inputs.nix-alien "default");
 
   mkPkgs = system:
     import inputs.nixpkgs {
@@ -30,11 +32,11 @@
     nixosHostName = settings.defaultNixosHost;
   };
 
-  homeSharedModules = [
-    inputs.catppuccin.homeModules.catppuccin
-    inputs.stylix.homeModules.stylix
-    inputs.nix-index-database.homeModules.nix-index
-  ];
+  homeSharedModules =
+    lib.optionals (inputs ? catppuccin) [inputs.catppuccin.homeModules.catppuccin]
+    ++ lib.optionals (inputs ? stylix) [inputs.stylix.homeModules.stylix]
+    ++ lib.optionals (inputs ? nix-index-database) [inputs.nix-index-database.homeModules.nix-index]
+    ++ [../home/modules/trix-os.nix];
 
   embeddedHomeSharedModules =
     homeSharedModules
@@ -70,20 +72,20 @@
         ++ extraModules;
     };
 
-  nixosIntegrationModules = [
-    inputs.disko.nixosModules.disko
-    inputs.impermanence.nixosModules.impermanence
-    inputs.sops-nix.nixosModules.sops
-    inputs.home-manager.nixosModules.home-manager
-    inputs.niri-flake.nixosModules.niri
-    inputs.hyprland.nixosModules.default
-    inputs.lanzaboote.nixosModules.lanzaboote
-    inputs.comin.nixosModules.comin
-    inputs.microvm.nixosModules.host
-    inputs.catppuccin.nixosModules.catppuccin
-    inputs.stylix.nixosModules.stylix
-    inputs.nix-index-database.nixosModules.nix-index
-  ];
+  nixosIntegrationModules =
+    lib.optionals (inputs ? disko) [inputs.disko.nixosModules.disko]
+    ++ lib.optionals (inputs ? impermanence) [inputs.impermanence.nixosModules.impermanence]
+    ++ lib.optionals (inputs ? sops-nix) [inputs.sops-nix.nixosModules.sops]
+    ++ lib.optionals (inputs ? home-manager) [inputs.home-manager.nixosModules.home-manager]
+    ++ lib.optionals (inputs ? niri-flake) [inputs.niri-flake.nixosModules.niri]
+    ++ lib.optionals (inputs ? hyprland) [inputs.hyprland.nixosModules.default]
+    ++ lib.optionals (inputs ? lanzaboote) [inputs.lanzaboote.nixosModules.lanzaboote]
+    ++ lib.optionals (inputs ? comin) [inputs.comin.nixosModules.comin]
+    ++ lib.optionals (inputs ? microvm) [inputs.microvm.nixosModules.host]
+    ++ lib.optionals (inputs ? catppuccin) [inputs.catppuccin.nixosModules.catppuccin]
+    ++ lib.optionals (inputs ? stylix) [inputs.stylix.nixosModules.stylix]
+    ++ lib.optionals (inputs ? nix-index-database) [inputs.nix-index-database.nixosModules.nix-index]
+    ++ [../hosts/common/trix-os.nix];
 
   mkNixos = {
     hostName,
@@ -146,18 +148,21 @@
     )
     settings.nixosHosts;
 
- extraFlakes = {
-   colmena = inputs.colmena;
-   morph = inputs.morph;
-   deploy_rs = inputs."deploy-rs";
-   hydra = inputs.hydra;
-   nixery = inputs.nixery;
-   nur = inputs.nur;
-   rnix_lsp = inputs."rnix-lsp";
-   sops = inputs.sops;
-   # lorri and devshell are already accessible via inputs.lorri and inputs.devshell
- };
-
+  extraFlakes = lib.filterAttrs (_: value: value != null) {
+    colmena = inputs.colmena or null;
+    morph = inputs.morph or null;
+    deploy_rs = inputs."deploy-rs" or null;
+    hydra = inputs.hydra or null;
+    nur = inputs.nur or null;
+    rnix_lsp = inputs."rnix-lsp" or null;
+    sops_nix = inputs.sops-nix or null;
+    agenix = inputs.agenix or null;
+    nh = inputs.nh or null;
+    nixvim = inputs.nixvim or null;
+    stylix = inputs.stylix or null;
+    trix_home_module = ../home/modules/trix-os.nix;
+    trix_nixos_module = ../hosts/common/trix-os.nix;
+  };
 in {
   inherit
     commonSpecialArgs
