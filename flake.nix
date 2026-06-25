@@ -213,6 +213,7 @@
                 "" \
                 "Apps:" \
                 "  nix run $flake_ref#trix -- info" \
+                "  nix run $flake_ref#trix-laptop -- full" \
                 "  nix run $flake_ref#pipeline -- validate" \
                 "  nix run $flake_ref#home-build" \
                 "  nix run $flake_ref#nixos-switch" \
@@ -230,6 +231,12 @@
             name = "trix";
             runtimeInputs = with pkgs; [coreutils curl findutils git gnugrep gnused gnutar gzip iproute2 jq nix procps util-linux zstd];
             text = builtins.readFile ./scripts/trixctl.sh;
+          };
+
+          trix-laptop = mkCommand {
+            name = "trix-laptop-bootstrap";
+            runtimeInputs = with pkgs; [coreutils git gnugrep jq nix openssh];
+            text = builtins.readFile ./scripts/trix-laptop-bootstrap.sh;
           };
 
           pipeline = mkCommand {
@@ -312,6 +319,7 @@
           inherit defaultHomeProfile;
           inherit (settings) defaultNixosHost;
           trixShells = ["trix-base" "trix-research" "trix-redteam" "trix-crypto" "trix-llm"];
+          trixApps = ["trix" "trix-laptop"];
         };
       in {
         inherit formatter;
@@ -347,7 +355,7 @@
             alejandra --check .
             statix check .
             deadnix --fail .
-            shellcheck install.sh repair-from-documents-tree.sh scripts/whocares-pipeline.sh scripts/trixctl.sh
+            shellcheck install.sh repair-from-documents-tree.sh scripts/whocares-pipeline.sh scripts/trixctl.sh scripts/trix-laptop-bootstrap.sh
             touch "$out"
           '';
         };
