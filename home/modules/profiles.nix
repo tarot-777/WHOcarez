@@ -33,7 +33,6 @@ in {
     ]
     ++ optionals (cfg.full.enable || cfg.vms.enable) [
       pkgs.qemu_kvm
-      pkgs.virt-manager
       pkgs.virt-viewer
       pkgs.libvirt
       pkgs.swtpm

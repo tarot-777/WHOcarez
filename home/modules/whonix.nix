@@ -2,6 +2,17 @@
 # whonix.nix - Home Manager helpers for the official libvirt Whonix VM pair
 # ---------------------------------------------------------------------------
 {pkgs, ...}: let
+  virtManager = pkgs.writeShellApplication {
+    name = "virt-manager";
+    text = ''
+      if [[ -x /usr/bin/virt-manager && -x /usr/bin/python3 ]]; then
+        exec /usr/bin/python3 /usr/bin/virt-manager "$@"
+      fi
+
+      exec ${pkgs.virt-manager}/bin/virt-manager "$@"
+    '';
+  };
+
   whonix = pkgs.writeShellApplication {
     name = "whonix";
     runtimeInputs = with pkgs; [
@@ -137,6 +148,14 @@
         printf '%-22s %s\n' "$label" "$value"
       }
 
+      libvirt_groups() {
+        local group
+        for group in libvirt libvirtd; do
+          getent group "$group" >/dev/null 2>&1 && printf '%s\n' "$group"
+        done
+        return 0
+      }
+
       doctor() {
         local failed=0
 
@@ -158,9 +177,20 @@
           failed=1
         fi
 
-        if getent group libvirt >/dev/null 2>&1; then
-          if id -nG | tr ' ' '\n' | grep -Fxq libvirt; then
-            report "libvirt group" "joined"
+        local available_libvirt_groups current_groups joined_libvirt_groups
+        available_libvirt_groups="$(libvirt_groups | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
+        current_groups="$(id -nG | tr ' ' '\n')"
+        joined_libvirt_groups=""
+        if [[ -n "$available_libvirt_groups" ]]; then
+          local group
+          for group in $available_libvirt_groups; do
+            if printf '%s\n' "$current_groups" | grep -Fxq "$group"; then
+              joined_libvirt_groups="''${joined_libvirt_groups:+$joined_libvirt_groups,}$group"
+            fi
+          done
+
+          if [[ -n "$joined_libvirt_groups" ]]; then
+            report "libvirt group" "joined ($joined_libvirt_groups)"
           else
             report "libvirt group" "not joined (log out after 'whonix daemon')"
           fi
@@ -207,7 +237,7 @@
         run_sudo systemctl enable --now libvirtd.service
 
         local added_group=0
-        for group in libvirt kvm; do
+        for group in libvirt libvirtd kvm; do
           if getent group "$group" >/dev/null 2>&1 &&
             ! id -nG | tr ' ' '\n' | grep -Fxq "$group"; then
             echo "[sudo] Adding $USER to the $group group"
@@ -487,10 +517,27 @@
       esac
     '';
   };
+
+  wxd = pkgs.writeShellApplication {
+    name = "wxd";
+    text = ''
+      exec ${whonix}/bin/whonix doctor "$@"
+    '';
+  };
 in {
-  home.packages = [whonix];
+  home.packages = [virtManager whonix wxd];
 
   home.sessionVariables.WHONIX_LIBVIRT_URI = "qemu:///system";
+
+  xdg.desktopEntries.virt-manager = {
+    name = "Virtual Machine Manager";
+    genericName = "Virtual machine management";
+    comment = "Manage virtual machines";
+    exec = "${virtManager}/bin/virt-manager";
+    icon = "virt-manager";
+    categories = ["System" "Emulator"];
+    startupNotify = true;
+  };
 
   programs.zsh.shellAliases = {
     wx = "whonix start";

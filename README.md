@@ -20,6 +20,37 @@ nix run github:tarot-777/WHOcares-#info
 That command prints the framework's targets, capabilities, and main entry
 points without activating the configuration.
 
+## Why This Exists
+
+Most dotfiles repos are a pile of config. WHOcares! is a piece of
+infrastructure: one flake, pinned end to end, that reproduces the same
+terminal, desktop, and security posture on any `x86_64-linux` machine —
+generic Linux, an existing NixOS box, or a fresh install — without hand
+edits. A few things it's meant to demonstrate:
+
+- **Reproducibility as a design constraint, not an afterthought.** Every
+  package, module, and flake input is pinned in `flake.lock`. `settings.nix`
+  is the single seam between "this machine" and "any machine" — `install.sh`
+  regenerates it for a new user, host, and checkout path, and the same
+  `lib/framework.nix` constructors build every target from there.
+- **Guarded automation over convenience scripts.** `scripts/whocares-pipeline.sh`
+  runs every workflow through validate → build → confirm → activate, with
+  explicit `--yes` gates before anything destructive (an activation, a
+  `nixos-switch`, a `nixos-anywhere` install). Nothing mutates a running
+  system without a build succeeding first and a human (or `--yes`) saying so.
+- **Privacy engineering, not just privacy tools.** The `whonix` controller
+  (`home/modules/whonix.nix`) verifies the official Whonix KVM image's GnuPG
+  signature against a pinned fingerprint in a throwaway keyring before ever
+  importing it, and drives the Gateway/Workstation pair through libvirt using
+  Whonix's own upstream domain and network definitions — so the isolation
+  boundary stays whatever Whonix's maintainers ship, not a hand-rolled copy.
+- **Built to be operated by an AI agent, not just a human.** `AGENT.md` and
+  `home/modules/llm-orchestrator.nix` are a first-class part of the repo:
+  redacted context bundles, command transcripts, and a guarded
+  validate-then-patch flow (`llm-review` / `llm-patch`) so an LLM assistant
+  can safely propose and apply changes without leaking secrets or bypassing
+  the same build/check gates a human would go through.
+
 ## Capabilities
 
 | Area | What WHOcares! provides |

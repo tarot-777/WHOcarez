@@ -146,18 +146,19 @@
     )
     settings.nixosHosts;
 
- extraFlakes = {
-   colmena = inputs.colmena;
-   morph = inputs.morph;
-   deploy_rs = inputs."deploy-rs";
-   hydra = inputs.hydra;
-   nixery = inputs.nixery;
-   nur = inputs.nur;
-   rnix_lsp = inputs."rnix-lsp";
-   sops = inputs.sops;
-   # lorri and devshell are already accessible via inputs.lorri and inputs.devshell
- };
-
+  # Pinned deployment/CI/DX flakes that aren't wired into any host by
+  # default. Exposed read-only through `flake.lib.extraFlakes` (see
+  # flake.nix) so they stay pinned in flake.lock and are inspectable /
+  # buildable (e.g. `nix build .#lib.extraFlakes.colmena.packages.x86_64-linux.colmena`)
+  # without forcing every deploy to depend on them.
+  extraFlakes =
+    {
+      inherit (inputs) colmena morph hydra nur lorri;
+    }
+    // {
+      deploy-rs = inputs."deploy-rs";
+      rnix-lsp = inputs."rnix-lsp";
+    };
 in {
   inherit
     commonSpecialArgs

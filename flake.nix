@@ -54,40 +54,14 @@
 
     # dank-material-shell input intentionally omitted or replaced if unavailable.
 
-    # Additional flake helpers and tooling selected for improved deployability
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Removed flake-utils-plus and snowfall (unavailable upstream).
-
-    cachix = {
-      url = "github:cachix/cachix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # devshell was unavailable via a simple HEAD lookup; omit for now to keep
-    # flake evaluation robust. Consider adding a pinned ref later.
-
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     lorri = {
       url = "github:nix-community/lorri";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    direnv = {
-      url = "github:direnv/direnv";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-
-
-    # Deployment, CI, and DX helpers requested by user
+    # Deployment, CI, and DX helpers, exposed read-only via `inputs.lib.extraFlakes`
+    # (see lib/framework.nix) so they're pinned and inspectable without being
+    # force-wired into every host.
     colmena = {
       url = "github:nix-community/colmena";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -120,11 +94,6 @@
 
     hyprland.url = "git+https://github.com/hyprwm/Hyprland.git?ref=refs/tags/v0.47.0&submodules=1";
 
-    misterio-starter = {
-      url = "github:misterio77/nix-starter-configs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -135,18 +104,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Use nushell from nixpkgs (no flake.nix at repo HEAD); rely on package in mkPkgs when needed.
+    # Use nushell, nh, and nix-ld straight from nixpkgs (no flake.nix at repo
+    # HEAD, or no benefit over the pinned nixpkgs package); rely on the
+    # packages in mkPkgs / home/modules instead of pinning separate flakes.
 
-    nh = {
-      url = "github:nix-community/nh";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix-ld = {
-      url = "github:nix-community/nix-ld";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
+    # nixvim is pinned but intentionally not wired into any host yet: it once
+    # caused module-merge errors when auto-included (see git history). Opt in
+    # per-host via `programs.nixvim` once you actually want it, the same way
+    # hosts/examples/agenix.nix and hosts/examples/rustfs.nix are opt-in.
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -529,6 +494,7 @@
           inherit settings;
           inherit
             (framework)
+            extraFlakes
             mkHome
             mkNixos
             mkPkgs

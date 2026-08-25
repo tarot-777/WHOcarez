@@ -1,14 +1,18 @@
-{ config, pkgs, lib, inputs, ... }:
-
+{
+  lib,
+  inputs,
+  ...
+}:
 # Example: opt-in rustfs service module for a NixOS host.
 # Import via `imports = [ ./examples/rustfs.nix ];`
 # Requires the flake input `inputs.rustfs` to be present (added to top-level flake inputs).
-
 let
-  rustfs = if lib.hasAttr "rustfs" inputs then inputs.rustfs else null;
-in
-{
-  imports = lib.optional (rustfs != null && rustfs.nixosModules ? true) (rustfs.nixosModules.rustfs) [];
+  rustfs =
+    if lib.hasAttr "rustfs" inputs
+    then inputs.rustfs
+    else null;
+in {
+  imports = lib.optional (rustfs != null) rustfs.nixosModules.rustfs;
 
   # Minimal configuration example — adapt paths and user
   services.rustfs = lib.mkIf (rustfs != null) {

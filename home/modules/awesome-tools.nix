@@ -472,6 +472,46 @@
     exec ${pkgs.tealdeer}/bin/tldr "$@"
   '';
 
+  # Arch-owned GUI/system packages that should not be pulled through Nix on this host.
+  archDeps = pkgs.writeShellScriptBin "arch-deps" ''
+    set -euo pipefail
+
+    if [[ ! -f /etc/arch-release ]]; then
+      echo "arch-deps: this helper is only for Arch Linux hosts." >&2
+      exit 1
+    fi
+    if [[ ! -x /usr/bin/pacman ]]; then
+      echo "arch-deps: /usr/bin/pacman was not found." >&2
+      exit 1
+    fi
+
+    packages=(
+      bitwarden
+      virt-manager
+      python-gobject
+      gtk-vnc
+      libvirt-python
+    )
+
+    if (($# > 0)); then
+      packages=("$@")
+    fi
+
+    sudo_bin=""
+    for candidate in /run/wrappers/bin/sudo /usr/bin/sudo; do
+      if [[ -x "$candidate" ]]; then
+        sudo_bin="$candidate"
+        break
+      fi
+    done
+    if [[ -z "$sudo_bin" ]]; then
+      echo "arch-deps: sudo was not found." >&2
+      exit 1
+    fi
+
+    exec "$sudo_bin" /usr/bin/pacman -S --needed "''${packages[@]}"
+  '';
+
   # Verify awesome-list tools are on PATH after `hm`
   toolsCheck = pkgs.writeShellScriptBin "tools-check" ''
     set -uo pipefail
@@ -503,7 +543,7 @@
     done
     echo ""
     echo "── Arch hybrid (non-NixOS helpers) ────────────────"
-    for t in nix-ld topgrade; do
+    for t in arch-deps nix-ld topgrade bitwarden virt-manager; do
       check "$t"
     done
     echo ""
@@ -562,6 +602,7 @@
     Bare-metal Arch + Niri + DMS (pacman via arch-deps)
       niri xdg-desktop-portal xdg-desktop-portal-gtk polkit
       wl-clipboard cliphist grim slurp fuzzel wlogout swayidle
+      bitwarden virt-manager python-gobject gtk-vnc libvirt-python
       dms-shell quickshell dgop matugen (from Nix HM)
 
     Verify install:  tools-check
@@ -586,6 +627,7 @@ in {
     nixExtraCtr
     nixCompose
     cheatSheet
+    archDeps
     awesomeList
     toolsCheck
     hmSwitch

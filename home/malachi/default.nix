@@ -853,7 +853,7 @@
     enableZshIntegration = true;
     defaultCacheTtl = 3600;
     maxCacheTtl = 86400;
-    pinentry.package = pkgs.pinentry-gtk2;
+    pinentry.package = pkgs.pinentry-gnome3;
   };
 
   # tmux → tmux.nix
@@ -892,8 +892,11 @@
       "--color=marker:#ff8ce6,fg+:#ffffff,prompt:#a855f7,hl+:#ff6b8a"
       "--color=border:#8e4f80"
     ];
-    fileWidgetCommand = "fd --type f --hidden --follow --exclude .git";
-    changeDirWidgetCommand = "fd --type d --hidden --follow --exclude .git";
+    fileWidget.command = "fd --type f --hidden --follow --exclude .git";
+    changeDirWidget.command = "fd --type d --hidden --follow --exclude .git";
+    # Atuin owns Ctrl-R for shell history (see programs.atuin above); fzf
+    # keeps the file/cd widgets only, so the two don't fight over the binding.
+    historyWidget.command = "";
   };
 
   # ── Mako notification daemon ───────────────────────────────────────────────
