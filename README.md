@@ -1,8 +1,10 @@
 # WHOcares!
 
+[![CI](https://github.com/tarot-777/WHOcarez/actions/workflows/ci.yml/badge.svg)](https://github.com/tarot-777/WHOcarez/actions/workflows/ci.yml)
 [![Nix Flake](https://img.shields.io/badge/Nix-Flake-5277C3?logo=nixos&logoColor=white)](https://nixos.org/)
 [![Home Manager](https://img.shields.io/badge/Home%20Manager-declarative-7EBAE4)](https://github.com/nix-community/home-manager)
 [![Platform](https://img.shields.io/badge/platform-x86__64--linux-lightgrey)](#current-targets)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **A flake-powered Linux workstation framework for a fast terminal, a coherent
 desktop, reproducible development tools, and guarded privacy workflows.**

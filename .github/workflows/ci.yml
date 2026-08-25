@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  flake-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Full flake check (eval + source-quality gate + NixOS host builds)
+        run: nix flake check --show-trace --accept-flake-config
+
+      - name: Build the malachi@coffin Home Manager profile end to end
+        run: |
+          nix build \
+            '.#homeConfigurations."malachi@coffin".activationPackage' \
+            --accept-flake-config --no-link --print-out-paths
