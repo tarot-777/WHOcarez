@@ -1,0 +1,8 @@
+version: 2
+updates:
+  # Dependabot has no "nix" ecosystem — flake.lock is kept current with
+  # `nix flake update` / `nix-up` instead (see README's Development section).
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
